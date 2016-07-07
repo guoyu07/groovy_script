@@ -43,6 +43,7 @@ def getProxyCardBase(){
    return returnVal
 }  
 
+// Luhn algorithm
 def checkDigit(idWithoutCheckDigit) {
     idWithoutCheckDigit = idWithoutCheckDigit.trim().toUpperCase()
     sum = 0
@@ -65,15 +66,17 @@ def getfullCard(card){
     return pcn;
 }
 
+//recursive call
 def getAndSetCard(){
   def returnVal=getProxyCardBase()
   def pcn=getfullCard(returnVal)
-
+  //if the card didn't exist, return the card.
   if (null==con.firstRow("select proxy_card_number from card where proxy_card_number=?",[pcn])){
      testRunner.testCase.testSuite.setPropertyValue("proxyCardNumber",pcn)
 //     return 0;
   } 
   else {
+  	//otherwise, try to get a new card. 
      getAndSetCard()	
   }
 }
